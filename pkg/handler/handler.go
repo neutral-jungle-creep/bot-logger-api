@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"services-front/pkg/service"
 )
 
@@ -26,4 +27,13 @@ func (h Handler) InitRoutes() *gin.Engine {
 		api.GET("/messages", h.messages)
 	}
 	return router
+}
+
+type ExceptResp struct {
+	Message string `json:"message"`
+}
+
+func NewExceptResp(c *gin.Context, statusCode int, message string) {
+	logrus.Error(message)
+	c.AbortWithStatusJSON(statusCode, message)
 }
