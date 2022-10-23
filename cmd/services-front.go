@@ -4,10 +4,14 @@ import (
 	"log"
 	"services-front/pkg"
 	"services-front/pkg/handler"
+	"services-front/pkg/service"
+	"services-front/pkg/storage"
 )
 
 func main() {
-	handlers := new(handler.Handler)
+	storages := storage.NewStorage()
+	services := service.NewService(storages)
+	handlers := handler.NewHandler(services)
 
 	srv := new(pkg.Server)
 	if err := srv.Run("8000", handlers.InitRoutes()); err != nil {
