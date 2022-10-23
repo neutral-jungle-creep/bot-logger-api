@@ -15,12 +15,17 @@ func main() {
 		log.Fatalf("init config error: %s", err.Error())
 	}
 
-	storages := storage.NewStorage()
+	db, err := storage.NewClient(viper.GetString("db"))
+	if err != nil {
+		log.Fatalf("init db error, %s", err.Error())
+	}
+
+	storages := storage.NewStorage(&db)
 	services := service.NewService(storages)
 	handlers := handler.NewHandler(services)
 
 	srv := new(pkg.Server)
-	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+	if err := srv.Run(viper.GetString("httpPort"), handlers.InitRoutes()); err != nil {
 		log.Fatalf("error http server, %s", err.Error())
 	}
 }

@@ -11,6 +11,6 @@ type Storage struct {
 	Show
 }
 
-func NewStorage() *Storage {
+func NewStorage(db *Client) *Storage {
 	return &Storage{}
 }
