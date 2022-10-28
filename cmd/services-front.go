@@ -3,14 +3,14 @@ package main
 import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"services-front/config"
+	"services-front/configs"
 	"services-front/pkg"
 	"services-front/pkg/handler"
 )
 
 func main() {
-	if err := config.InitConfig(); err != nil {
-		logrus.Fatalf("init config error: %s", err.Error())
+	if err := configs.InitConfig("../configs"); err != nil {
+		logrus.Fatalf("init configs error: %s", err.Error())
 	}
 
 	handlers := handler.NewHandler()
