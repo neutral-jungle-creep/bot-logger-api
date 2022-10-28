@@ -6,8 +6,6 @@ import (
 	"services-front/config"
 	"services-front/pkg"
 	"services-front/pkg/handler"
-	"services-front/pkg/service"
-	"services-front/pkg/storage"
 )
 
 func main() {
@@ -15,14 +13,7 @@ func main() {
 		logrus.Fatalf("init config error: %s", err.Error())
 	}
 
-	db, err := storage.NewClient(viper.GetString("db"))
-	if err != nil {
-		logrus.Fatalf("init db error, %s", err.Error())
-	}
-
-	storages := storage.NewStorage(&db)
-	services := service.NewService(storages)
-	handlers := handler.NewHandler(services)
+	handlers := handler.NewHandler()
 
 	srv := new(pkg.Server)
 	if err := srv.Run(viper.GetString("httpPort"), handlers.InitRoutes()); err != nil {
