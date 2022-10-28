@@ -3,14 +3,12 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"services-front/pkg/service"
 )
 
 type Handler struct {
-	service *service.Service
 }
 
-func NewHandler(service *service.Service) *Handler {
+func NewHandler() *Handler {
 	return &Handler{}
 }
 
