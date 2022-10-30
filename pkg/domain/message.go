@@ -1,9 +1,9 @@
 package domain
 
 type Message struct {
-	Id       int
-	SenderId int64
-	Date     string
-	Text     string
-	IsEdit   bool
+	Id     int
+	Sender string
+	Date   string
+	Text   string
+	IsEdit bool
 }
