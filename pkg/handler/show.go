@@ -6,8 +6,10 @@ import (
 )
 
 func (h *Handler) messages(c *gin.Context) {
-	userId, _ := c.Get(userCtx)
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"ответ": userId,
-	})
+	messages, err := h.service.Show.ShowAllMessages()
+	if err != nil {
+		NewExceptResp(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, messages)
 }

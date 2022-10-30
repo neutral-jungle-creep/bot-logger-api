@@ -21,7 +21,7 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	userDto := dto.NewUser(input.Id, input.Username, input.Password)
+	userDto := dto.NewUserDto(input.Id, input.Username, input.Password)
 	if err := h.service.Authorization.Registration(userDto); err != nil {
 		NewExceptResp(c, http.StatusInternalServerError, err.Error())
 	}
@@ -40,7 +40,7 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	userDto := dto.NewUser(input.Id, input.Username, input.Password)
+	userDto := dto.NewUserDto(input.Id, input.Username, input.Password)
 
 	token, err := h.service.Authorization.ReturnToken(userDto)
 	if err != nil {
