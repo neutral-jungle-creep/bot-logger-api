@@ -1,6 +1,9 @@
 package storage
 
-import "github.com/jackc/pgx/v4"
+import (
+	"context"
+	"github.com/jackc/pgx/v4"
+)
 
 type ShowStorage struct {
 	conn *pgx.Conn
@@ -12,6 +15,12 @@ func NewShowStorage(conn *pgx.Conn) *ShowStorage {
 	}
 }
 
-func (s *ShowStorage) GetMessages() error {
-	return nil
+func (s *ShowStorage) GetMessages() (pgx.Rows, error) {
+	query := `SELECT * FROM public.messages`
+
+	result, err := s.conn.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }

@@ -11,7 +11,7 @@ type Authorization interface {
 }
 
 type Show interface {
-	GetMessages() error
+	GetMessages() (pgx.Rows, error)
 }
 
 type Storage struct {
