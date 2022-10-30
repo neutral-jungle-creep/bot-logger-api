@@ -3,6 +3,7 @@ package storage
 import (
 	"github.com/jackc/pgx/v4"
 	"services-front/pkg/domain"
+	"services-front/pkg/service/dto"
 )
 
 type Authorization interface {
@@ -11,7 +12,7 @@ type Authorization interface {
 }
 
 type Show interface {
-	GetMessages() (pgx.Rows, error)
+	GetMessages() ([]dto.MessageDto, error)
 }
 
 type Storage struct {
