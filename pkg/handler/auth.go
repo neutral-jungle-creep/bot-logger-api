@@ -1,14 +1,10 @@
 package handler
 
 import (
-	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"net/http"
-	"services-front/pkg/service"
 	"services-front/pkg/service/dto"
-	"services-front/pkg/storage"
 )
 
 type UserRequest struct {
@@ -25,17 +21,8 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	db, err := storage.NewConnect(viper.GetString("dbLink"))
-	if err != nil {
-		c.Error(err)
-		return
-	}
-	defer db.Close(context.Background())
-
-	authStorage := storage.NewPgAuthStorage(db)
-	authService := service.NewAuthService(authStorage)
 	userDto := dto.NewUser(input.Id, input.Username, input.Password)
-	if err := authService.Registration(userDto); err != nil {
+	if err := h.service.Authorization.Registration(userDto); err != nil {
 		NewExceptResp(c, http.StatusInternalServerError, err.Error())
 	}
 
@@ -53,18 +40,9 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	db, err := storage.NewConnect(viper.GetString("dbLink"))
-	if err != nil {
-		c.Error(err)
-		return
-	}
-	defer db.Close(context.Background())
-
-	authStorage := storage.NewPgAuthStorage(db)
-	authService := service.NewAuthService(authStorage)
 	userDto := dto.NewUser(input.Id, input.Username, input.Password)
 
-	token, err := authService.ReturnToken(userDto)
+	token, err := h.service.Authorization.ReturnToken(userDto)
 	if err != nil {
 		NewExceptResp(c, http.StatusForbidden, err.Error())
 		return

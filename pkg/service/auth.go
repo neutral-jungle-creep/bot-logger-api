@@ -2,10 +2,12 @@ package service
 
 import (
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt"
 	"services-front/pkg/domain"
 	"services-front/pkg/service/dto"
+	"services-front/pkg/storage"
 	"time"
 )
 
@@ -15,20 +17,16 @@ const (
 	signInKey  = "drbvt6178vydrvmh2"
 )
 
-type AuthStorage interface {
-	LogInUser(user *domain.User) (int, error)
-	CreateUser(user *domain.User) error
-}
-
 type AuthService struct {
-	storage AuthStorage
+	storage storage.Authorization
 }
 
-func NewAuthService(storage AuthStorage) AuthService {
-	return AuthService{
+func NewAuthService(storage storage.Authorization) *AuthService {
+	return &AuthService{
 		storage: storage,
 	}
 }
+
 func (s *AuthService) Registration(u *dto.UserDto) error {
 	user := domain.NewUser(u.Id, u.Username, generatePasswordHash(u.Password))
 	return s.storage.CreateUser(user)
@@ -36,12 +34,12 @@ func (s *AuthService) Registration(u *dto.UserDto) error {
 
 type tokenClaims struct {
 	jwt.StandardClaims
-	UserId int
+	UserId int `json:"user_id"`
 }
 
 func (s *AuthService) ReturnToken(u *dto.UserDto) (string, error) {
 	user := domain.NewUser(u.Id, u.Username, generatePasswordHash(u.Password))
-	userId, err := s.storage.LogInUser(user)
+	userId, err := s.storage.GetUser(user)
 	if err != nil {
 		return "", err
 	}
@@ -59,4 +57,23 @@ func generatePasswordHash(password string) string {
 	hash.Write([]byte(password))
 
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
+
+func (s *AuthService) ParseToken(accessToken string) (int, error) {
+	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("ошибка авторизации")
+		}
+		return []byte(signInKey), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	claims, ok := token.Claims.(*tokenClaims)
+	if !ok {
+		return 0, err
+	}
+
+	return claims.UserId, nil
 }

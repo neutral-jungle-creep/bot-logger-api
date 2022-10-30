@@ -7,17 +7,17 @@ import (
 	"services-front/pkg/domain"
 )
 
-type PgAuthStorage struct {
+type AuthStorage struct {
 	conn *pgx.Conn
 }
 
-func NewPgAuthStorage(conn *pgx.Conn) *PgAuthStorage {
-	return &PgAuthStorage{
+func NewAuthStorage(conn *pgx.Conn) *AuthStorage {
+	return &AuthStorage{
 		conn: conn,
 	}
 }
 
-func (s *PgAuthStorage) CreateUser(user *domain.User) error {
+func (s *AuthStorage) CreateUser(user *domain.User) error {
 	query := ` INSERT INTO public.users (tg_user_id, user_name, user_password, active_user) VALUES ($1, $2, $3, true)`
 	_, err := s.conn.Exec(context.Background(), query, user.Id, user.Username, user.Password)
 	if err != nil {
@@ -26,7 +26,7 @@ func (s *PgAuthStorage) CreateUser(user *domain.User) error {
 	return nil
 }
 
-func (s *PgAuthStorage) LogInUser(user *domain.User) (int, error) {
+func (s *AuthStorage) GetUser(user *domain.User) (int, error) {
 	var userId int
 	query := `SELECT id FROM public.users WHERE tg_user_id=$1 AND user_name=$2 AND user_password=$3`
 
