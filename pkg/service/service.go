@@ -12,7 +12,7 @@ type Authorization interface {
 }
 
 type Show interface {
-	// добавить методы
+	ShowAllMessages() error
 }
 
 type Service struct {
@@ -23,5 +23,6 @@ type Service struct {
 func NewService(storage *storage.Storage) *Service {
 	return &Service{
 		Authorization: NewAuthService(storage.Authorization),
+		Show:          NewShowService(storage.Show),
 	}
 }

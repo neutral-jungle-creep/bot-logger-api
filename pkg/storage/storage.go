@@ -11,7 +11,7 @@ type Authorization interface {
 }
 
 type Show interface {
-	// добавить методы
+	GetMessages() error
 }
 
 type Storage struct {
@@ -22,5 +22,6 @@ type Storage struct {
 func NewStorage(conn *pgx.Conn) *Storage {
 	return &Storage{
 		Authorization: NewAuthStorage(conn),
+		Show:          NewShowStorage(conn),
 	}
 }
