@@ -1,6 +1,7 @@
 package service
 
 import (
+	"services-front/pkg/domain"
 	"services-front/pkg/service/dto"
 	"services-front/pkg/storage"
 )
@@ -12,7 +13,7 @@ type Authorization interface {
 }
 
 type Show interface {
-	ShowAllMessages() error
+	ShowAllMessages() ([]domain.Message, error)
 }
 
 type Service struct {

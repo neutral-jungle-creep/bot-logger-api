@@ -6,7 +6,7 @@ type UserDto struct {
 	Password string
 }
 
-func NewUser(id int64, name string, password string) *UserDto {
+func NewUserDto(id int64, name string, password string) *UserDto {
 	return &UserDto{
 		Id:       id,
 		Username: name,
