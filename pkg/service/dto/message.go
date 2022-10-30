@@ -9,13 +9,3 @@ type MessageDto struct {
 	Text   string    `json:"text"`
 	IsEdit bool      `json:"isEdit"`
 }
-
-func NewMessage(id int, sender string, date time.Time, text string, isEdit bool) *MessageDto {
-	return &MessageDto{
-		Id:     id,
-		Sender: sender,
-		Date:   date,
-		Text:   text,
-		IsEdit: isEdit,
-	}
-}
