@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"github.com/jackc/pgx/v4"
+	"github.com/spf13/viper"
 	"services-front/pkg/service/dto"
 )
 
@@ -18,10 +19,7 @@ func NewShowStorage(conn *pgx.Conn) *ShowStorage {
 
 func (s *ShowStorage) GetMessages() ([]dto.MessageDto, error) {
 	var messages []dto.MessageDto
-
-	query := `SELECT m.message_id, u.user_name, m.date, m.text, m.is_edit
-				FROM messages m INNER JOIN users u ON u.id=m.user_id`
-	result, err := s.conn.Query(context.Background(), query)
+	result, err := s.conn.Query(context.Background(), viper.GetString("queries.getMessages"))
 	if err != nil {
 		return nil, err
 	}
