@@ -29,6 +29,13 @@ func NewAuthService(storage storage.Authorization) *AuthService {
 
 func (s *AuthService) Registration(u *dto.UserDto) error {
 	user := domain.NewUser(u.Id, u.Username, generatePasswordHash(u.Password))
+	if err := s.storage.GetTgChatMember(user); err != nil {
+		return err
+	}
+	_, err := s.storage.GetUser(user)
+	if err == nil {
+		return errors.New("пользователь уже существует")
+	}
 	return s.storage.CreateUser(user)
 }
 

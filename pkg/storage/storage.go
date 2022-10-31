@@ -8,6 +8,7 @@ import (
 
 type Authorization interface {
 	GetUser(user *domain.User) (int, error)
+	GetTgChatMember(user *domain.User) error
 	CreateUser(user *domain.User) error
 }
 

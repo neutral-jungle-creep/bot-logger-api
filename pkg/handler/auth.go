@@ -23,7 +23,8 @@ func (h *Handler) signUp(c *gin.Context) {
 
 	userDto := dto.NewUserDto(input.Id, input.Username, input.Password)
 	if err := h.service.Authorization.Registration(userDto); err != nil {
-		NewExceptResp(c, http.StatusInternalServerError, err.Error())
+		NewExceptResp(c, http.StatusForbidden, err.Error())
+		return
 	}
 
 	logrus.Infof("регистрация пользователя %s прошла успешно", userDto.Username)
