@@ -8,7 +8,7 @@ import (
 
 type Authorization interface {
 	Registration(u *dto.UserDto) error
-	ReturnToken(u *dto.UserDto) (string, error)
+	Authorization(u *dto.UserDto) (string, error)
 	ParseToken(accessToken string) (int, error)
 }
 

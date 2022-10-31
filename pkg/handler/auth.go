@@ -43,12 +43,13 @@ func (h *Handler) signIn(c *gin.Context) {
 
 	userDto := dto.NewUserDto(input.Id, input.Username, input.Password)
 
-	token, err := h.service.Authorization.ReturnToken(userDto)
+	token, err := h.service.Authorization.Authorization(userDto)
 	if err != nil {
 		NewExceptResp(c, http.StatusForbidden, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, map[string]interface{}{
+		"ответ": "авторизация прошла успешно",
 		"token": token,
 	})
 }

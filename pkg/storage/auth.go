@@ -32,8 +32,8 @@ func (s *AuthStorage) GetTgChatMember(user *domain.User) error {
 
 	result := s.conn.QueryRow(context.Background(), query, user.Id)
 	if err := result.Scan(&userId); err != nil {
-		return errors.New("пользователь не найден в чате телеграм, для того, чтобы зарегистрироваться," +
-			"получите приглашение в чат")
+		return errors.New("пользователь не найден в чате телеграм, для того, чтобы зарегистрироваться " +
+			"или авторизоваться получите приглашение в чат")
 	}
 	return nil
 }

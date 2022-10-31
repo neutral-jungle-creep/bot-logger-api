@@ -44,8 +44,12 @@ type tokenClaims struct {
 	UserId int `json:"user_id"`
 }
 
-func (s *AuthService) ReturnToken(u *dto.UserDto) (string, error) {
+func (s *AuthService) Authorization(u *dto.UserDto) (string, error) {
 	user := domain.NewUser(u.Id, u.Username, generatePasswordHash(u.Password))
+	if err := s.storage.GetTgChatMember(user); err != nil {
+		return "", err
+	}
+
 	userId, err := s.storage.GetUser(user)
 	if err != nil {
 		return "", err
