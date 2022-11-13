@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"io"
 	"os"
 	"os/signal"
 	"services-front/configs"
@@ -18,6 +19,12 @@ func main() {
 	if err := configs.InitConfig(); err != nil {
 		logrus.Fatalf("init configs error: %s", err.Error())
 	}
+
+	file, err := configs.CreateOrOpenFileForLogs(viper.GetString("logFile"))
+	if err != nil {
+		logrus.Fatalf("Error in file for logs: %s", err.Error())
+	}
+	logrus.SetOutput(io.MultiWriter(os.Stdout, file))
 
 	db, err := storage.NewConnect(viper.GetString("dbLink"))
 	if err != nil {
