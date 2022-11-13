@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	if err := configs.InitConfig("../configs"); err != nil {
+	if err := configs.InitConfig(); err != nil {
 		logrus.Fatalf("init configs error: %s", err.Error())
 	}
 
