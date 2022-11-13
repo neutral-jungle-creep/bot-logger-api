@@ -1,5 +1,6 @@
 httpPort: "8000"
 dbLink: "postgres://postgres:111@localhost:5432/test_db"
+logFile: "logs.log"
 queries:
   createUser: "UPDATE public.users SET user_name=$1, user_password=$2 WHERE tg_user_id=$3"
   getTgChatMember: "SELECT id FROM public.users WHERE tg_user_id=$1 AND active_user=TRUE"
