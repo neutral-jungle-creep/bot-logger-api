@@ -4,8 +4,15 @@ import (
 	"context"
 	"errors"
 	"github.com/jackc/pgx/v4"
-	"github.com/spf13/viper"
 	"services-front/pkg/domain"
+)
+
+const (
+	createUser = `UPDATE public.users SET user_name=$1, user_password=$2 WHERE tg_user_id=$3`
+
+	getTgChatMember = `SELECT id FROM public.users WHERE tg_user_id=$1 AND active_user=TRUE`
+
+	getUser = `SELECT id FROM public.users WHERE tg_user_id=$1 AND user_name=$2 AND user_password=$3`
 )
 
 type AuthStorage struct {
@@ -19,7 +26,7 @@ func NewAuthStorage(conn *pgx.Conn) *AuthStorage {
 }
 
 func (s *AuthStorage) CreateUser(user *domain.User) error {
-	_, err := s.conn.Exec(context.Background(), viper.GetString("queries.createUser"),
+	_, err := s.conn.Exec(context.Background(), createUser,
 		user.Username,
 		user.Password,
 		user.Id,
@@ -34,7 +41,7 @@ func (s *AuthStorage) CreateUser(user *domain.User) error {
 func (s *AuthStorage) GetTgChatMember(user *domain.User) error {
 	var userId int
 
-	result := s.conn.QueryRow(context.Background(), viper.GetString("queries.getTgChatMember"),
+	result := s.conn.QueryRow(context.Background(), getTgChatMember,
 		user.Id,
 	)
 
@@ -48,7 +55,7 @@ func (s *AuthStorage) GetTgChatMember(user *domain.User) error {
 func (s *AuthStorage) GetUser(user *domain.User) (int, error) {
 	var userId int
 
-	result := s.conn.QueryRow(context.Background(), viper.GetString("queries.getUser"),
+	result := s.conn.QueryRow(context.Background(), getUser,
 		user.Id,
 		user.Username,
 		user.Password,

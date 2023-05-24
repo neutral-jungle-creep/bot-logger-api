@@ -111,19 +111,10 @@ go run .\cmd\bot-logger-api.go --path my_folder --config my_config
 httpPort: "8000"
 dbLink: "postgres://postgres:111@localhost:5432/test_db"
 logFile: "logs.log"
-queries:
-  createUser: "UPDATE public.users SET user_name=$1, user_password=$2 WHERE tg_user_id=$3"
-  getTgChatMember: "SELECT id FROM public.users WHERE tg_user_id=$1 AND active_user=TRUE"
-  getUser: "SELECT id FROM public.users WHERE tg_user_id=$1 AND user_name=$2 AND user_password=$3"
-  getMessages: "SELECT m.message_id, u.tg_user_name, m.date, m.text, m.is_edit FROM messages m INNER JOIN users u ON u.id=m.user_id"
 ```
 
 ### пояснения к полям:
 
 - **httpPort** - порт на котором запустится сервис
 - **dbLink** - ссылка для подключения к базе данных
-- **queries** - группа sql запросов, с помощью которыхбудет осуществляться работа с базой данных.
-  - **createUser** - создает пользователя 
-  - **getTgChatMember** - проверяет, состоит ли пользователь в чате телеграм
-  - **getUser** - проверяет на правильность введенные данные от учетной записи пользователя
-  - **getMessages** - выводит все сообщения, которые были отправлены в чат и записаны в базу данных 
+- **logFile** - файл, в который будут сохраняться логи
